@@ -90,8 +90,8 @@ for i in range(300001,301000):
 	else:
 		pass
 
-600001-604999
-for i in range(600001,605000):
+600000-604999
+for i in range(600000,605000):
 	j = str(i)
 	stockUrl = baseUrl + shUrl + j
 	content = _session.get(stockUrl).content
