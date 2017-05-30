@@ -2,15 +2,11 @@
 
 ### 新浪股票数据接口
 -----
-#### 深股
-http://hq.sinajs.cn/list=sz0***** 
+#### 深股 http://hq.sinajs.cn/list=sz0***** 
 
-#### 新股
-http://hq.sinajs.cn/list=sz3*****
+#### 新股 http://hq.sinajs.cn/list=sz3*****
 
-#### 沪股
-http://hq.sinajs.cn/list=sh6******
-
+#### 沪股 http://hq.sinajs.cn/list=sh6******
 
 ### 爬虫运行
 -----
