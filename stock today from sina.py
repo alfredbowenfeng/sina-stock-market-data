@@ -2,107 +2,63 @@
 # -*- coding: UTF-8 -*-
 import requests
 import urllib.request
-import csv
-baseUrl = "http://hq.sinajs.cn/list="
-szUrl = "sz"
-shUrl = "sh"
-sz1 = "00000"
-sz2 = "0000"
-sz3 = "000"
-sz4 = "00"
-F = ""
-F1 = ""
-F2 = ""
-F3 = ""
-F4 = ""
-F5 = ""
-F6 = ""
-Heading = "股票代码,股票名称,今日开盘价,昨日收盘价,今日收盘价,今日最高价,今日最低价,买一报价,卖一报价,成交数量,成交金额,买一数量,买一报价,买二数量,买二报价,买三数量,买三报价,买四数量,买四报价,买五数量,买五报价,卖一数量,卖一报价,卖二数量,卖二报价,卖三数量,卖三报价,卖四数量,卖四报价,卖五数量,卖五报价,日期,时间"
+import pandas as pd
+stock,baseUrl = "","http://hq.sinajs.cn/list="
+List1,List2,List3,List4,List5,List6,List7,List8 = [],[],[],[],[],[],[],[]
 _session = requests.session()
 
-# 000001-000009
-for i in range(1,10):
-    j = str(i)
-    stockUrl = baseUrl + szUrl + sz1 + j
-    content = _session.get(stockUrl).content
-    stock = content.decode('gbk')[13:]
-    if len(stock) > 11:
-        F11 = stock[-1]
-        F12 = stock[0:6] + ","
-        F13 = stock[8:-6]
-        F1 += F11 + F12 + F13
-    else:
-        pass
+def genUrl(x):
+	stockID = str(x)
+	if x >=10:
+		if x >= 100:
+			if x >= 1000:
+				if x >= 3000:
+					if x >= 300000:
+						if x >= 300740:
+							if x >= 600000:
+								stockUrl = baseUrl + "sh" + stockID
+								getPage(stockUrl)
+							else:
+								pass
+						else:
+							stockUrl = baseUrl + "sz" + stockID
+							getPage(stockUrl)
+					else:
+						pass
+				else:
+					stockUrl = baseUrl + "sz00" + stockID
+					getPage(stockUrl)
+			else:
+				stockUrl = baseUrl + "sz000" + stockID
+				getPage(stockUrl)
+		else:
+			stockUrl = baseUrl + "sz0000" + stockID
+			getPage(stockUrl)
+	else:
+		stockUrl = baseUrl + "sz00000" + stockID
+		getPage(stockUrl)
 
-# 000010-000099
-for i in range(10,100):
-	j = str(i)
-	stockUrl = baseUrl + szUrl + sz2 + j
-	content = _session.get(stockUrl).content
-	stock = content.decode('gbk')[13:]
-	if len(stock) > 11:
-		F21 = stock[-1]
-		F22 = stock[0:6] + ","
-		F23 = stock[8:-6]
-		F2 += F21 + F22 + F23
+def getPage(u):
+	global stock
+	content = _session.get(u).content
+	content = content.decode('gbk')[13:]
+	if len(content) > 11:
+		stock = content[0:6] + "," + content[8:-6]
+		element = stock.split(",")
+		List1.append(element[0])
+		List2.append(element[1])
+		List3.append(element[2])
+		List4.append(element[3])
+		List5.append(element[4])
+		List6.append(element[5])
+		List7.append(element[6])
+		List8.append(element[-2])
 	else:
 		pass
 
-# 000100-000999
-for i in range(100,1000):
-	j = str(i)
-	stockUrl = baseUrl + szUrl + sz3 + j
-	content = _session.get(stockUrl).content
-	stock = content.decode('gbk')[13:]
-	if len(stock) > 11:
-		F31 = stock[-1]
-		F32 = stock[0:6] + ","
-		F33 = stock[8:-6]
-		F3 += F31 + F32 + F33
-	else:
-		pass
+for i in range(1,604000):
+	genUrl(i)
 
-# 001000-002999
-for i in range(1000,3000):
-	j = str(i)
-	stockUrl = baseUrl + szUrl + sz4 + j
-	content = _session.get(stockUrl).content
-	stock = content.decode('gbk')[13:]
-	if len(stock) > 11:
-		F41 = stock[-1]
-		F42 = stock[0:6] + ","
-		F43 = stock[8:-6]
-		F4 += F41 + F42 + F43
-	else:
-		pass
-
-# 300001-300999
-for i in range(300001,301000):
-	j = str(i)
-	stockUrl = baseUrl + szUrl + j
-	content = _session.get(stockUrl).content
-	stock = content.decode('gbk')[13:]
-	if len(stock) > 11:
-		F51 = stock[-1]
-		F52 = stock[0:6] + ","
-		F53 = stock[8:-6]
-		F5 += F51 + F52 + F53
-	else:
-		pass
-
-# 600000-604999
-for i in range(600000,605000):
-	j = str(i)
-	stockUrl = baseUrl + shUrl + j
-	content = _session.get(stockUrl).content
-	stock = content.decode('gbk')[13:]
-	if len(stock) > 11:
-		F61 = stock[-1]
-		F62 = stock[0:6] + ","
-		F63 = stock[8:-6]
-		F6 += F61 + F62 + F63
-	else:
-		pass
-
-F = Heading + F1 + F2 + F3 + F4 + F5 + F6
-print(F)
+# Export data
+dataframe = pd.DataFrame({"股票代码":List1,"股票名称":List2,"今日开盘价":List3,"昨日收盘价":List4,"今日收盘价":List5,"今日最高价":List6,"今日最低价":List7,"日期":List8})
+dataframe.to_csv('/data.csv',index=False,sep=',',encoding="utf-8")
