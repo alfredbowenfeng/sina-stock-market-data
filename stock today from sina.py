@@ -1,10 +1,9 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 import requests
-import urllib.request
 import pandas as pd
-stock,baseUrl = "","http://hq.sinajs.cn/list="
-List1,List2,List3,List4,List5,List6,List7,List8 = [],[],[],[],[],[],[],[]
+stock, baseUrl = "", "http://hq.sinajs.cn/list="
+List1, List2, List3, List4, List5, List6, List7, List8 = [], [], [], [], [], [], [], []
 _session = requests.session()
 
 def genUrl(x):
@@ -56,9 +55,9 @@ def getPage(u):
 	else:
 		pass
 
-for i in range(1,604000):
+for i in range(1, 604000):
 	genUrl(i)
 
 # Export data
-dataframe = pd.DataFrame({"股票代码":List1,"股票名称":List2,"今日开盘价":List3,"昨日收盘价":List4,"今日收盘价":List5,"今日最高价":List6,"今日最低价":List7,"日期":List8})
-dataframe.to_csv('/data.csv',index=False,sep=',',encoding="utf-8")
+dataframe = pd.DataFrame({"股票代码":List1, "股票名称":List2, "今日开盘价":List3, "昨日收盘价":List4, "今日收盘价":List5, "今日最高价":List6, "今日最低价":List7, "日期":List8})
+dataframe.to_csv('/data.csv', index=False, sep=',', encoding="utf-8")
